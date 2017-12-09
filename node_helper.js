@@ -12,6 +12,7 @@ const cheerio = require("cheerio");
 
 // Constants
 const URL = "https://apod.nasa.gov/apod/astropix.html";
+
 const IMG_PREFIX = "https://apod.nasa.gov/apod/";
 
 module.exports = NodeHelper.create({
@@ -41,8 +42,15 @@ module.exports = NodeHelper.create({
 	request(URL, function (err, response, html) {
 		let $ = cheerio.load(html);
 		var img_src = IMG_PREFIX + $('img').attr('src');
+        var text = $("body").html();
+       
+        var regex = /<b>[\s\S]?Explanation:[\s\S]*?<\/b>([\s\S]*?)<b>/g;
+        var match = text.match(regex);
+        var explanation = match[0];
+        
+        explanation = $(explanation).text();
 		console.log("NASA Astro Pic of the Day URL: " + img_src);
-		self.sendSocketNotification('URL', img_src);
+		self.sendSocketNotification('URL', [img_src,explanation]);
 	});
 	
   }

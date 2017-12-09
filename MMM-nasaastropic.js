@@ -26,9 +26,11 @@ Module.register('MMM-nasaastropic', {
 
   socketNotificationReceived: function(notification, payload) {
     Log.log('MMM-nasaastropic: socketNotificationReceived ' + notification);
-    //Log.log(payload);
+    
     if (notification === 'URL') {
-		this.img_src = payload;
+        
+		this.img_src = payload[0];
+        this.exp = payload[1];
 		this.updateDom(this.config.animationSpeed);
     }
   },
@@ -54,7 +56,12 @@ Module.register('MMM-nasaastropic', {
 	img.src = this.img_src;
 	img.alt = this.img_src;
 	wrapper.appendChild(img);
-
+    var explanation = document.createElement('div');
+    explanation.innerHTML = this.exp;
+    explanation.style = "font-size: medium;";
+    
+    wrapper.appendChild(explanation);
+       
 	return wrapper;
   },
 });
